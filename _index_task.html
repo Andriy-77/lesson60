@@ -1,0 +1,9 @@
+<h1>Профіль {{ user.username }}</h1>
+<p>Email: {{ user.email }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <label> Новий email:
+    <input type="email" name="email" required></label>
+    <button type="submit">Зберегти</button>
+</form>

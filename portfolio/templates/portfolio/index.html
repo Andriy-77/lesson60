@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Portfolio{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+ <div class="row">
+    <h1>Привіт я Валентин розробник Python/Django</h1>
+    <p> Мій портфоліо сайт</p>
+
+    <!-- <img src="/media/images/hero-image.png" alt="Hero Image" class="img-fluid"> -->
+ </div>
+<!-- End Hero -->
+
+<!-- About Me Section -->
+ <div class="row">
+    <h2>Про мене</h2>
+    <p>Я досвідчений розробник Python/Django з пристрастю до створення ефективних веб-додатків. Маю досвід роботи з різними проектами, від малих стартапів до великих корпоративних рішень.</p>
+ </div> 
+
+ <!-- Skils -->
+    <div class="row">
+        <h2>Навички</h2>
+        <ul>
+            {% for skill in skills %}
+                <li>{{ skill.name }} - {{ skill.level }}%</li>
+            {% endfor %}
+        </ul>
+    </div>
+ <!-- End Skils -->
+<!-- Projects Section -->   
+    <div class="row">
+        <h2>Проекти</h2>
+        <div class="row">
+            {% for project in projects %}
+            <h5 class="card-title">{{ project.title }}</h5>
+            <p class="card-text">{{ project.description }}</p>
+            <img src="{{ project.image.url }}" alt="{{ project.title }}" class="img-fluid mb-3"/>
+            <a href="{{ project.link }}" class="btn btn-primary" target="_blank">Переглянути проект</a>       
+            {% endfor %}
+        </div>
+    </div>
+<!-- End Projects Section -->
+
+<!-- Experience Section -->
+    <div class="row">
+        <h2>Досвід роботи</h2>
+        <div class="row">
+            {% for experience in experiences %}
+            <h5 class="card-title">{{ experience.position }} at {{ experience.company }}</h5>
+            <p class="card-text">{{ experience.start_date }} - {{ experience.end_date }}</p>
+            <p class="card-text">{{ experience.description }}</p>       
+            {% endfor %}
+        </div>
+    </div>
+<!-- End Experience Section -->
+
+{% endblock %}

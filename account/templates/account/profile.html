@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Profile {{ user.username }}{% endblock %}
+{% block content %}
+
+<div class="container mt-5" style="max-width: 450px;">
+    <h2 class="mb-4">Profile {{ user.username }}</h2>
+
+    <div class="text-center mb-4">
+        {% if user.avatar %}
+            <img src="{{ user.avatar.url }}" alt="Avatar" class="rounded-circle" width="150" height="150">
+        {% else %}
+            <img src="{% static '/avatars/default_avatar.jpg' %}" alt="Default Avatar" class="rounded-circle" width="150" height="150">
+        {% endif %}
+
+        <table>
+            <tr>
+                <th>First Name:</th>
+                <td>{{ user.first_name }}</td>
+            </tr>
+            <tr>
+                <th>Last Name:</th>
+                <td>{{ user.last_name }}</td>           
+            </tr>
+            <tr>
+                <th>Email:</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            
+            <tr>
+                <th>Phone:</th>
+                <td>{{ user.phone }}</td>               
+            </tr>
+        </table>
+
+</div>
+
+{% endblock %}
