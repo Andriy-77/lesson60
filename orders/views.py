@@ -7,6 +7,7 @@ from django.conf import settings
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.db.models import Count
+from django.db.models.functions import TruncMonth
 from datetime import datetime, timedelta
 
 def pricing_view(request):
@@ -16,8 +17,36 @@ def pricing_view(request):
 def analytics_view(request):
     total_orders = Order.objects.count()
     done_orders = Order.objects.filter(status="done").count()
-    top_months = OrderAnalytics.objects.values('month').annotate(count=Count('month')).order_by('-count')[:6]
-    return render(request, "orders/analytics.html", {"total": total_orders, "done": done_orders, "months": top_months})
+    months_qs = (
+        Order.objects.annotate(month=TruncMonth("created_at"))
+        .values("month")
+        .annotate(count=Count("id"))
+        .order_by("month")
+    )
+
+    months = [
+        {"month": m["month"].strftime("%Y-%m") if m["month"] else "—", "count": m["count"]}
+        for m in months_qs
+    ]
+
+    top_pages = PageView.objects.order_by("-views")[:10]
+
+    # Popular projects by internal view counter
+    from portfolio.models import Project
+
+    top_projects = Project.objects.order_by("-views", "-data", "title")[:5]
+
+    return render(
+        request,
+        "orders/analytics.html",
+        {
+            "total": total_orders,
+            "done": done_orders,
+            "months": months,
+            "top_pages": top_pages,
+            "top_projects": top_projects,
+        },
+    )
 
 def order_view(request):
     if request.method == "POST":

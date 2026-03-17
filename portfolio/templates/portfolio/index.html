@@ -5,55 +5,123 @@
 {% block content %}
 
 <!-- Hero -->
- <div class="row">
-    <h1>Привіт я Валентин розробник Python/Django</h1>
-    <p> Мій портфоліо сайт</p>
-
-    <!-- <img src="/media/images/hero-image.png" alt="Hero Image" class="img-fluid"> -->
- </div>
+<section class="py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-6 mb-2">Привіт! Я Python/Django розробник</h1>
+            <p class="lead mb-0">Це моє портфоліо: проєкти, навички та досвід.</p>
+        </div>
+    </div>
+</section>
 <!-- End Hero -->
 
 <!-- About Me Section -->
- <div class="row">
-    <h2>Про мене</h2>
-    <p>Я досвідчений розробник Python/Django з пристрастю до створення ефективних веб-додатків. Маю досвід роботи з різними проектами, від малих стартапів до великих корпоративних рішень.</p>
- </div> 
-
- <!-- Skils -->
+<section class="py-4">
     <div class="row">
-        <h2>Навички</h2>
-        <ul>
-            {% for skill in skills %}
-                <li>{{ skill.name }} - {{ skill.level }}%</li>
-            {% endfor %}
-        </ul>
-    </div>
- <!-- End Skils -->
-<!-- Projects Section -->   
-    <div class="row">
-        <h2>Проекти</h2>
-        <div class="row">
-            {% for project in projects %}
-            <h5 class="card-title">{{ project.title }}</h5>
-            <p class="card-text">{{ project.description }}</p>
-            <img src="{{ project.image.url }}" alt="{{ project.title }}" class="img-fluid mb-3"/>
-            <a href="{{ project.link }}" class="btn btn-primary" target="_blank">Переглянути проект</a>       
-            {% endfor %}
+        <div class="col-12 col-lg-10">
+            <h2 class="h3">Про мене</h2>
+            <p class="mb-2">
+                Я перейшов(ла) в ІТ з <strong>[ваша сфера/досвід]</strong> і почав(ла) з основ веб-розробки.
+                На курсі зібрав(ла) кілька Django/HTML/CSS проєктів і продовжую прокачуватися через практику.
+            </p>
+            <p class="mb-2">
+                Моя мотивація — будувати зрозумілі, корисні продукти та рости як backend/full‑stack розробник.
+                Зараз фокус: Django, робота з БД, інтеграції та деплой.
+            </p>
+            <p class="mb-0">
+                Поза кодом: <strong>[2–4 хобі/інтереси]</strong>.
+            </p>
         </div>
     </div>
+</section>
+
+ <!-- Skils -->
+<section class="py-4">
+    <div class="row">
+        <div class="col-12 col-lg-8">
+            <h2 class="h3">Навички</h2>
+            {% if skills %}
+                <ul class="list-group">
+                    {% for skill in skills %}
+                        <li class="list-group-item d-flex align-items-center justify-content-between">
+                            <div>
+                                <strong>{{ skill.name }}</strong>
+                                <span class="text-muted">({{ skill.get_category_display }})</span>
+                            </div>
+                            <span class="badge text-bg-primary">{{ skill.level }}%</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted mb-0">Додайте навички в адмінці, і вони зʼявляться тут.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+ <!-- End Skils -->
+<!-- Projects Section -->   
+<section class="py-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="h3">Проєкти</h2>
+        </div>
+    </div>
+    <div class="row g-3">
+        {% for project in projects %}
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm">
+                    {% if project.image %}
+                        <img src="{{ project.image.url }}" alt="{{ project.title }}" class="card-img-top">
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title mb-2">{{ project.title }}</h5>
+                        <p class="card-text mb-2">{{ project.description }}</p>
+                        <p class="card-text text-muted small mb-3"><strong>Tech:</strong> {{ project.technologies }}</p>
+                        <div class="mt-auto d-flex gap-2 flex-wrap">
+                            <a href="{% url 'portfolio:project_detail' project.pk %}" class="btn btn-primary btn-sm">
+                                Деталі
+                            </a>
+                            {% if project.github_url %}
+                                <a href="{{ project.github_url }}" class="btn btn-outline-primary btn-sm" target="_blank" rel="noopener">
+                                    GitHub
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <p class="text-muted mb-0">Поки немає проєктів. Додайте мінімум 5 в адмінці.</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
 <!-- End Projects Section -->
 
 <!-- Experience Section -->
+<section class="py-4">
     <div class="row">
-        <h2>Досвід роботи</h2>
-        <div class="row">
-            {% for experience in experiences %}
-            <h5 class="card-title">{{ experience.position }} at {{ experience.company }}</h5>
-            <p class="card-text">{{ experience.start_date }} - {{ experience.end_date }}</p>
-            <p class="card-text">{{ experience.description }}</p>       
-            {% endfor %}
+        <div class="col-12">
+            <h2 class="h3">Досвід</h2>
         </div>
     </div>
+    <div class="row g-3">
+        {% for experience in experiences %}
+            <div class="col-12 col-lg-8">
+                <div class="p-3 border rounded">
+                    <h5 class="mb-1">{{ experience.position }} · {{ experience.company }}</h5>
+                    <p class="text-muted small mb-2">{{ experience.start_date }} - {{ experience.end_date|default:"Present" }}</p>
+                    <p class="mb-0">{{ experience.description }}</p>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <p class="text-muted mb-0">Додайте досвід в адмінці, і він зʼявиться тут.</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
 <!-- End Experience Section -->
 
 {% endblock %}

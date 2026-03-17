@@ -22,8 +22,8 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("position", models.CharField()),
-                ("company", models.CharField()),
+                ("position", models.CharField(max_length=120)),
+                ("company", models.CharField(max_length=120)),
                 ("start_date", models.DateField()),
                 ("end_date", models.DateField(blank=True, null=True)),
                 ("description", models.TextField(blank=True)),
@@ -46,11 +46,13 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("title", models.CharField()),
+                ("title", models.CharField(max_length=200)),
                 ("description", models.TextField()),
                 (
                     "technologies",
-                    models.CharField(help_text="через кому: Python, JS, Postgres"),
+                    models.CharField(
+                        help_text="через кому: Python, JS, Postgres", max_length=300
+                    ),
                 ),
                 ("data", models.DateField(blank=True, null=True)),
                 (
@@ -77,7 +79,7 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("name", models.CharField()),
+                ("name", models.CharField(max_length=100)),
                 (
                     "level",
                     models.PositiveSmallIntegerField(default=50, help_text="0-100"),
@@ -85,6 +87,7 @@ class Migration(migrations.Migration):
                 (
                     "category",
                     models.CharField(
+                        max_length=20,
                         choices=[
                             ("soft", "Soft"),
                             ("frontend", "Frontend"),

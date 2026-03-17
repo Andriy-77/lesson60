@@ -20,10 +20,11 @@ class CategoryAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
     list_display = ("author", "post", "created_at", "approved")
     list_filter = ("approved",)
+    search_fields = ("author", "email", "content", "post__title")
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ("title", "data", "github_url")
+    list_display = ("title", "data", "views", "github_url")
     list_filter = ("data",)
     search_fields = ("title", "technologies")
     readonly_fields = ()

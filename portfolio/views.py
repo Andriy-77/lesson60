@@ -1,6 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Project, Skill, Experience, BlogPost, Tag, Category, Comment
-from django.db.models import Count
+from django.db.models import Count, F
+from .forms import CommentForm
 
 def blog_list(request):
     posts = BlogPost.objects.filter(published=True)
@@ -19,11 +20,32 @@ def blog_detail(request, slug):
     post.views += 1
     post.save()
     comments = post.comments.filter(approved=True)
-    return render(request, "portfolio/blog_detail.html", {"post": post, "comments": comments})
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment: Comment = form.save(commit=False)
+            comment.post = post
+            comment.approved = False
+            comment.save()
+            return redirect("portfolio:blog_detail", slug=post.slug)
+    else:
+        form = CommentForm()
+
+    return render(
+        request,
+        "portfolio/blog_detail.html",
+        {"post": post, "comments": comments, "form": form},
+    )
 
 def popular_projects(request):
-    projects = Project.objects.all()[:5]
+    projects = Project.objects.order_by("-views", "-data", "title")[:5]
     return render(request, "portfolio/popular_projects.html", {"projects": projects})
+
+def project_detail(request, pk: int):
+    project = get_object_or_404(Project, pk=pk)
+    Project.objects.filter(pk=project.pk).update(views=F("views") + 1)
+    project.refresh_from_db(fields=["views"])
+    return render(request, "portfolio/project_detail.html", {"project": project})
 
 def index(request):
     projects = Project.objects.all()

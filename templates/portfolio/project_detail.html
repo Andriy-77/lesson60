@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{{ project.title }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <a class="text-decoration-none" href="{% url 'portfolio:index' %}">← Назад на головну</a>
+
+    <div class="row mt-3 g-4">
+        <div class="col-12 col-lg-6">
+            {% if project.image %}
+                <img src="{{ project.image.url }}" class="img-fluid rounded" alt="{{ project.title }}">
+            {% else %}
+                <div class="border rounded bg-light d-flex align-items-center justify-content-center" style="height: 280px;">
+                    <span class="text-muted">No image</span>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-12 col-lg-6">
+            <h1 class="mb-2">{{ project.title }}</h1>
+            <p class="text-muted mb-3">
+                Переглядів: {{ project.views }}
+                {% if project.data %} · {{ project.data }}{% endif %}
+            </p>
+
+            <p class="mb-3">{{ project.description }}</p>
+            <p class="mb-4"><strong>Technologies:</strong> {{ project.technologies }}</p>
+
+            <div class="d-flex gap-2 flex-wrap">
+                {% if project.github_url %}
+                    <a class="btn btn-outline-primary" href="{{ project.github_url }}" target="_blank" rel="noopener">
+                        GitHub
+                    </a>
+                {% endif %}
+                <a class="btn btn-primary" href="{% url 'order:order_view' %}">Хочу схожий проєкт</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
